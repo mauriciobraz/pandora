@@ -1,0 +1,66 @@
+version: "3.7"
+
+networks:
+    caddy_network:
+        driver: bridge
+
+volumes:
+    caddy_data:
+    caddy_config:
+
+services:
+    caddy:
+        build:
+            context: .
+            dockerfile: ./docker/Caddy.dockerfile
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - caddy_data:/data
+            - caddy_config:/config
+            - ./Caddyfile:/etc/caddy/Caddyfile
+        depends_on:
+            - fastapi
+        environment:
+            # Proxy
+            - CADDY_PROXY_NAME=${CADDY_PROXY_NAME:-fastapi}
+            - CADDY_PROXY_PORT=${CADDY_PROXY_PORT:-8000}
+
+            # TLS / Domain
+            - CADDY_DOMAIN=${CADDY_DOMAIN:-yourdomain.localhost}
+            - CADDY_EMAIL=${CADDY_EMAIL:-your-email@example.com}
+
+            # Rate Limiting
+            - CADDY_RATE_LIMIT=${CADDY_RATE_LIMIT:-2}
+            - CADDY_RATE_BURST=${CADDY_RATE_BURST:-5}
+
+            # Load Balancing
+            - CADDY_LB_POLICY=${CADDY_LB_POLICY:-random}
+
+            # Health Check
+            - CADDY_HEALTH_PATH=${CADDY_HEALTH_PATH:-/health}
+            - CADDY_HEALTH_INTERVAL=${CADDY_HEALTH_INTERVAL:-30s}
+
+            # Performance Optimization
+            - CADDY_MAX_BYTES_PER_SEC=${CADDY_MAX_BYTES_PER_SEC:-50000}
+        networks:
+            - caddy_network
+        restart: unless-stopped
+
+    fastapi:
+        build:
+            context: .
+            dockerfile: ./docker/Poetry.dockerfile
+        ports:
+            - "8000:8000"
+        healthcheck:
+            test:
+                ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"]
+            start_period: 40s
+            interval: 1m30s
+            timeout: 10s
+            retries: 5
+        networks:
+            - caddy_network
+       restart: unless-stopped

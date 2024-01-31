@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "pandora"
+license = "MIT"
+version = "0.0.1"
+readme = "README.md"
+authors = ["Maurício Braz Gonçalves <https://github.com/mauriciobraz>"]
+description = "A privacy-focused RAG bot for versatile document handling that operates offline."
+
+[tool.poetry.scripts]
+start = "pandora.main:start"
+
+[tool.poetry.dependencies]
+python = "3.10.13"
+flake8 = "^7.0.0"
+mypy = "^1.8.0"
+black = "^24.1.1"
+uvicorn = "^0.27.0.post1"
+python-dotenv = "^1.0.1"
+loguru = "^0.7.2"
+fastapi = "^0.109.0"
+toml = "^0.10.2"
+
+[tool.black]
+line-length = 88
+target-version = ["py39"]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
