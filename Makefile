@@ -27,17 +27,17 @@ install:
 
 .PHONY: fmt
 fmt:
-	poetry run black source/
+	poetry run black pandora/
 
 .PHONY: type
 type:
-	poetry run mypy --ignore-missing-imports source/
+	poetry run mypy --ignore-missing-imports pandora/
 
 .PHONY: lint
 lint:
-	poetry run flake8 source/
-	poetry run black --check source/
-	poetry run mypy --ignore-missing-imports source/
+	poetry run flake8 pandora/
+	poetry run black --check pandora/
+	poetry run mypy --ignore-missing-imports pandora/
 
 .PHONY: test
 test:
