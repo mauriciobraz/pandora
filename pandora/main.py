@@ -15,6 +15,7 @@ from .api.errors.exception_handlers import (
     ExceptionHandlers,
 )
 
+from .api.routers.auth_router import auth_router
 from .api.routers.entry_router import entry_router
 
 from .helpers.dotenv import get_env_variable
@@ -68,6 +69,7 @@ def main() -> FastAPI:
         ExceptionHandlers.unhandled_exception,
     )
 
+    app.include_router(auth_router)
     app.include_router(entry_router)
 
     return app
