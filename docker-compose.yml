@@ -7,6 +7,7 @@ networks:
 volumes:
     caddy_data:
     caddy_config:
+    chroma_data:
 
 services:
     caddy:
@@ -53,7 +54,7 @@ services:
             context: .
             dockerfile: ./docker/Poetry.dockerfile
         ports:
-            - "8000:8000"
+            - "8080:8000"
         healthcheck:
             test:
                 ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"]
@@ -64,3 +65,17 @@ services:
         networks:
             - caddy_network
        restart: unless-stopped
+
+    chroma:
+        image: ghcr.io/chroma-core/chroma:latest
+        environment:
+            - IS_PERSISTENT=TRUE
+            - CHROMA_SERVER_AUTH_CREDENTIALS_FILE=./chroma.htpasswd
+            - CHROMA_SERVER_AUTH_PROVIDER=chromadb.auth.basic.BasicAuthServerProvider
+            - CHROMA_SERVER_AUTH_CREDENTIALS_PROVIDER=chromadb.auth.providers.HtpasswdFileServerAuthCredentialsProvider
+        volumes:
+            - chroma_data:/chroma/chroma
+        ports:
+            - "8000:8000"
+        networks:
+            - caddy_network
