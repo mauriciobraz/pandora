@@ -17,6 +17,8 @@ from .api.errors.exception_handlers import (
 
 from .api.routers.auth_router import auth_router
 from .api.routers.entry_router import entry_router
+from .api.routers.query_router import query_router
+from .api.routers.document_router import document_router
 
 from .helpers.dotenv import get_env_variable
 
@@ -71,6 +73,9 @@ def main() -> FastAPI:
 
     app.include_router(auth_router)
     app.include_router(entry_router)
+
+    app.include_router(query_router)
+    app.include_router(document_router)
 
     return app
 

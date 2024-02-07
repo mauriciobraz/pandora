@@ -1,9 +1,12 @@
 from uuid import UUID
 
+from sqlalchemy.ext.declarative import DeclarativeMeta, declarative_base
+
 from fastapi_users.schemas import BaseUser, BaseUserCreate, BaseUserUpdate
 from fastapi_users_db_sqlalchemy import SQLAlchemyBaseUserTableUUID
 
-from ..helpers.database import Base
+
+Base: DeclarativeMeta = declarative_base()
 
 
 class User(SQLAlchemyBaseUserTableUUID, Base):  # type: ignore

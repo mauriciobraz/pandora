@@ -3,11 +3,10 @@ from typing import AsyncGenerator
 from fastapi import Depends
 from fastapi_users_db_sqlalchemy import SQLAlchemyUserDatabase
 
-from sqlalchemy.ext.declarative import DeclarativeMeta, declarative_base
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 from .dotenv import get_env_variable
-from ..schemas.user_schemas import User
+from ..schemas.user_schemas import Base, User
 
 DATABASE_URL = get_env_variable(
     str,
@@ -28,9 +27,6 @@ async_session_maker = async_sessionmaker(
 async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
     async with async_session_maker() as session:
         yield session
-
-
-Base: DeclarativeMeta = declarative_base()
 
 
 async def migrate():

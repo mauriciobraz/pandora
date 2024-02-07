@@ -1,9 +1,7 @@
 from fastapi import status, APIRouter
 from fastapi.responses import PlainTextResponse, JSONResponse
 
-entry_router = APIRouter(
-    prefix="/",
-)
+entry_router = APIRouter()
 
 
 @entry_router.get(
